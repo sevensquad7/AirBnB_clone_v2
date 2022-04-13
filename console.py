@@ -128,7 +128,7 @@ class HBNBCommand(cmd.Cmd):
         for key_value in kwargs:
             [key, value] = key_value.split('=')
             value = value.replace('_', '')
-            value = value.replace('"', '')
+            value = value.replace('"', '\"')
             setattr(new_instance, key, value)
         storage.new(new_instance)
         storage.save()
