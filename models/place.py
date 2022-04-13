@@ -2,11 +2,19 @@
 """ Place Module for HBNB project """
 from models.base_model import BaseModel, Base
 from models.review import Review
-from sqlalchemy import Column, String, Integer, Float, ForeignKey
+from models.amenity import Amenity
+from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from os import getenv
 
-
+place_amenity = Table('place_amenity', Base.metadata,
+                      Column('place_id', String(60),
+                             ForeignKey('places.id'),
+                             nullable=False),
+                      Column('amenity_id', String(60),
+                             ForeignKey('amenities.id'),
+                             nullable=False)
+)
 class Place(BaseModel, Base):
     """ A place to stay """
     if getenv('HBNB_TYPE_STORAGE') == 'db':
@@ -21,8 +29,10 @@ class Place(BaseModel, Base):
         price_by_night = Column(Integer, nullable=False, default=0)
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
-        amenity_ids = []
         reviews = relationship('Review', backref='place')
+        amenities = relationship('Amenity', secondary='place_amenity',
+                                 back_populates='place_amenities', viewonly=False)
+        
     else:
         city_id = ""
         user_id = ""
@@ -41,6 +51,17 @@ class Place(BaseModel, Base):
             """ returns the list of Review instances with place_id equals
             to the current Place.id """
             dict_review = storage.all(Review)
+            store = list()
+            for key, value in dict_review.items():
+                if value.place_id == self.id:
+                    store.append(value)
+            return store
+
+        @property
+        def amenities(self):
+            """ returns the list of Review instances with place_id equals
+            to the current Amenity.id """
+            dict_amenity = storage.all(Amenity)
             store = list()
             for key, value in dict_review.items():
                 if value.place_id == self.id:
