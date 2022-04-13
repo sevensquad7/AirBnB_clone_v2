@@ -4,6 +4,10 @@ from sqlalchemy import create_engine
 from models.base_model import Base
 from models.state import State
 from models.city import City
+from models.user import User
+from models.place import Place
+from models.review import Review
+from models.amenity import Amenity
 from sqlalchemy.orm import sessionmaker
 from os import getenv
 
@@ -25,7 +29,10 @@ class DBStorage:
 
     def all(self, cls=None):
         if cls is None:
-            return DBStorage.__session
+            classes = [User, Place, State, City, Amenity, Review]
+            for i in classes:
+                db += self.__session.query(i).all()
+            return db
         db = self.__session.query(cls)
         store = {}
         for obj in db:
