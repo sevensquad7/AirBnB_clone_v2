@@ -127,7 +127,7 @@ class HBNBCommand(cmd.Cmd):
         new_instance = HBNBCommand.classes[class_args]()
         for key_value in kwargs:
             [key, value] = key_value.split("=")
-            value = value.replace("_", "")
+            value = value.replace("_", " ")
             value = value.replace("\"", "")
             setattr(new_instance, key, value)
         storage.new(new_instance)
