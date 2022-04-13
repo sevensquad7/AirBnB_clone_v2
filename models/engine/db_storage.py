@@ -29,10 +29,16 @@ class DBStorage:
 
     def all(self, cls=None):
         if cls is None:
+            store = {}
             classes = [User, Place, State, City, Amenity, Review]
             for i in classes:
-                db += self.__session.query(i).all()
-            return db
+                try:
+                    db = self.__session.query(i).all()
+                    for obj in db:
+                        store[obj.to_dict()['__class__'] + '.' + obj.id] = obj
+                except:
+                    continue
+            return store
         db = self.__session.query(cls)
         store = {}
         for obj in db:
