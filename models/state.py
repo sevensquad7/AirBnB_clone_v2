@@ -19,7 +19,7 @@ class State(BaseModel, Base):
             """  returns the list of City instances with state_id equals
             to the current State.id """
             dict_city = storage.all(City)
-            store = list()
+            store = []
             for key, value in dict_city.items():
                 if value.state_id == self.id:
                     store.append(value)
