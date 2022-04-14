@@ -4,7 +4,6 @@ import uuid
 from datetime import datetime
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
-import models
 from os import getenv
 
 if getenv('HBNB_TYPE_STORAGE') == "db":
@@ -35,10 +34,10 @@ class BaseModel:
         else:
             if 'id' not in kwargs.keys():
                 kwargs['id'] = str(uuid.uuid4())
-            if 'updated_at' not in kwargs.keys():
-                kwargs['updated_at'] = datetime.now()
             if 'created_at' not in kwargs.keys():
-                kwargs['created_at'] = datetime.now()
+                self.created_at = datetime.now()
+            if 'updated_at' not in kwargs.keys():
+                self.updated_at = datetime.now()
             if '__class__' in kwargs.keys():
                 del kwargs['__class__']
             for key, value in kwargs.items():
@@ -52,9 +51,10 @@ class BaseModel:
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
+        from models import storage
         self.updated_at = datetime.now()
-        models.storage.new(self)
-        models.storage.save()
+        storage.new(self)
+        storage.save()
 
     def to_dict(self):
         """Convert instance into dict format"""
@@ -69,4 +69,5 @@ class BaseModel:
         return dictionary
 
     def delete(self):
-        models.storage.delete()
+        from models import storage
+        storage.delete()
