@@ -34,11 +34,12 @@ class FileStorage:
     def reload(self):
         """Loads storage dictionary from file"""
         from models.base_model import BaseModel
-        from models.user import User
+
         from models.place import Place
         from models.state import State
         from models.city import City
         from models.amenity import Amenity
+        from models.user import User
         from models.review import Review
 
         classes = {
@@ -47,11 +48,11 @@ class FileStorage:
                     'Review': Review
                   }
         try:
-            temp = {}
-            with open(FileStorage.__file_path, 'r') as f:
-                temp = json.load(f)
-                for key, val in temp.items():
-                    self.all()[key] = classes[val['__class__']](**val)
+            with open(self.__file_path, 'r', encoding='UTF-8') as file:
+                js = json.load(file)
+            for key, value in js.items():
+                reloadobj = classes[js[key]["__class__"]](**js[key])
+                self.__objects[key] = reloadobj
         except FileNotFoundError:
             pass
 
@@ -59,5 +60,14 @@ class FileStorage:
         """ Delete obj from __objects if it’s inside
         - if obj is equal to None """
         if obj:
-            key = obj.to_dict()['__class__'] + '.' + obj.id
-            del FileStorage.__objects[key]
+            for key, value in FileStorage.__objects.items():
+                if value == obj:
+                    del FileStorage.__objects[key]
+                    self.save()
+                    return
+        else:
+            pass
+
+    def close(self):
+        """method to reload"""
+        self.reload()
