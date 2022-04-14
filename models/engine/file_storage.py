@@ -60,13 +60,8 @@ class FileStorage:
         """ Delete obj from __objects if it’s inside
         - if obj is equal to None """
         if obj:
-            for key, value in FileStorage.__objects.items():
-                if value == obj:
-                    del FileStorage.__objects[key]
-                    self.save()
-                    return
-        else:
-            pass
+            key = obj.to_dict()['__class__'] + '.' + obj.id
+            del FileStorage.__objects[key]
 
     def close(self):
         """method to reload"""
