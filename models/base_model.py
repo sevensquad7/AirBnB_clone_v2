@@ -6,7 +6,10 @@ from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from os import getenv
 
-Base = declarative_base()
+if getenv('HBNB_TYPE_STORAGE') == "db":
+    Base = declarative_base()
+else:
+    Base = object
 
 
 class BaseModel:
@@ -41,7 +44,6 @@ class BaseModel:
                 self.key = value
             self.__dict__.update(kwargs)
 
-
     def __str__(self):
         """Returns a string representation of the instance"""
         cls = (str(type(self)).split('.')[-1]).split('\'')[0]
@@ -67,4 +69,5 @@ class BaseModel:
         return dictionary
 
     def delete(self):
+        from models import storage
         storage.delete()
