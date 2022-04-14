@@ -10,6 +10,8 @@ from models.review import Review
 from models.amenity import Amenity
 from sqlalchemy.orm import sessionmaker
 from os import getenv
+classes = {"Amenity": Amenity, "City": City,
+           "Place": Place, "Review": Review, "State": State, "User": User}
 
 
 class DBStorage:
@@ -28,22 +30,14 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        if cls is None:
-            store = {}
-            classes = [User, Place, State, City, Amenity, Review]
-            for i in classes:
-                try:
-                    db = self.__session.query(i).all()
-                    for obj in db:
-                        store[obj.to_dict()['__class__'] + '.' + obj.id] = obj
-                except:
-                    continue
-            return store
-        db = self.__session.query(cls)
-        store = {}
-        for obj in db:
-            store[obj.to_dict()['__class__'] + '.' + obj.id] = obj
-        return store
+        new_dict = {}
+        for clss in classes:
+            if cls is None or cls is classes[clss] or cls is clss:
+                objs = self.__session.query(classes[clss]).all()
+                for obj in objs:
+                    key = obj.__class__.__name__ + '.' + obj.id
+                    new_dict[key] = obj
+        return (new_dict)
 
     def new(self, obj):
         self.__session.add(obj)
