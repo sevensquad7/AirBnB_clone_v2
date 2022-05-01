@@ -14,8 +14,6 @@ sudo chown -R ubuntu:ubuntu /data/
 echo "Holberton School" > /data/web_static/releases/test/index.html
 ## line copy data path 1 --> path 2
 sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
-## Service nginx - start.
-sudo service nginx start
 ## adding line into location /etc/nginx/sites-available/default
 sudo sed -i "/listen 80 default_server;/ a \\\n\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n" /etc/nginx/sites-available/default
 ## Restart service nginx
