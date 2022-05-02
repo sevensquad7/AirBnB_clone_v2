@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
-## Install web server - Nginx.
-## -----------------------------
 ## Run sudo update.
 sudo apt-get -y update
-## Install nginx.
-sudo apt-get -y install nginx
 ## sets up your web servers for the deployment of web_static. It must:
 sudo mkdir -p /data/web_static/releases/test/
 sudo mkdir -p /data/web_static/shared/
