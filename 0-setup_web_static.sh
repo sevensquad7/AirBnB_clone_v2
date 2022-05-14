@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
-## Run sudo update.
+# Prepare your web servers
+
+## Update server
 sudo apt-get -y update
-## Run sudo update.
 sudo apt-get -y upgrade
-## Install nginx.
+## Install NGINX
 sudo apt-get -y install nginx
-## sets up your web servers for the deployment of web_static. It must:
-sudo mkdir -p /data/web_static/releases/test/
-sudo mkdir -p /data/web_static/shared/
-## sudo chown $USER:$USER /data/
-sudo chown -R ubuntu:ubuntu /data/
-## Create file index --> index.html to /data/web_static/releases/test/.
-echo "Holberton School" > /data/web_static/releases/test/index.html
-## line copy data path 1 --> path 2
+## Creates directories
+sudo mkdir -p /data/web_static/shared /data/web_static/releases/test
+## Write Hello World in index with tee command
+echo "Hello World" | sudo tee /data/web_static/releases/test/index.html
+## Create Symbolic link
 sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
-## adding line into location /etc/nginx/sites-available/default
+## Change owner and group like ubuntu
+sudo chown -R ubuntu:ubuntu /data
+## Add new configuration to NGINX
 sudo sed -i "/listen 80 default_server;/ a \\\n\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n" /etc/nginx/sites-available/default
-## Restart service nginx
+## Restart NGINX
 sudo service nginx restart
