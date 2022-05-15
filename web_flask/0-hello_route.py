@@ -8,7 +8,7 @@ Your web application must be listening on 0.0.0.0, port 5000
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route('/', strict_slashes=False)
 def index():
     """Return Hello HBNB"""
     return "Hello HBNB!"
